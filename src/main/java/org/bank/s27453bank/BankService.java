@@ -22,6 +22,7 @@ public class BankService {
         }
         customer.setBalance(customer.getBalance() - amount);
         return new TransactionResult(TransactionStatus.ACCEPTED, customer.getBalance());
+
     }
 
     public TransactionResult depositFunds(String customerId, double amount) {
@@ -29,8 +30,12 @@ public class BankService {
         if (customer == null) {
             return new TransactionResult(TransactionStatus.DECLINED, 0);
         }
-        customer.setBalance(customer.getBalance() + amount);
-        return new TransactionResult(TransactionStatus.ACCEPTED, customer.getBalance());
+        double newBalance = customer.getBalance() + amount;
+        if (newBalance < 0) {
+            return new TransactionResult(TransactionStatus.DECLINED, customer.getBalance());
+        }
+        customer.setBalance(newBalance);
+        return new TransactionResult(TransactionStatus.ACCEPTED, newBalance);
     }
 
     public Customer getCustomerDetails(String customerId) {

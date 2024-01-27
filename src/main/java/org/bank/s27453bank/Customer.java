@@ -2,7 +2,7 @@ package org.bank.s27453bank;
 
 public class Customer {
     private final String id;
-    private final double balance;
+    private double balance;
 
 
     public Customer(String id, double balance) {
@@ -18,6 +18,6 @@ public class Customer {
     }
 
     public void setBalance(double balance) {
-
+        this.balance = balance;
     }
 }
