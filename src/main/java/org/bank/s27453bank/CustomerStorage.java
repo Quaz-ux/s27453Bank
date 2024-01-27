@@ -1,19 +1,21 @@
 package org.bank.s27453bank;
 
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 
-@Component
 public class CustomerStorage {
     private Map<String, Customer> customers = new HashMap<>();
 
-    public void addCustomer(Customer customer) {
+    public boolean addCustomer(Customer customer) {
+        if (customer == null || customer.getId() == null || customers.containsKey(customer.getId())) {
+            return false;
+        }
         customers.put(customer.getId(), customer);
+        return true;
     }
 
     public Customer getCustomer(String id) {
         return customers.get(id);
     }
+
 }

@@ -17,8 +17,7 @@ class CustomerStorageTest {
     @Test
     void testAddAndGetCustomer() {
         Customer customer = new Customer("123", 1000);
-        customerStorage.addCustomer(customer);
-
+        assertTrue(customerStorage.addCustomer(customer), "Should successfully add customer");
         Customer retrievedCustomer = customerStorage.getCustomer("123");
         assertNotNull(retrievedCustomer, "Customer should not be null");
         assertEquals("123", retrievedCustomer.getId(), "Customer ID should match");
@@ -26,8 +25,20 @@ class CustomerStorageTest {
     }
 
     @Test
+    void testAddCustomerThatAlreadyExists() {
+        Customer customer1 = new Customer("123", 1000);
+        assertTrue(customerStorage.addCustomer(customer1), "First addition should be successful");
+        Customer customer2 = new Customer("123", 2000);
+        assertFalse(customerStorage.addCustomer(customer2), "Should not add customer with duplicate ID");
+    }
+
+    @Test
+    void testAddNullCustomer() {
+        assertFalse(customerStorage.addCustomer(null), "Should not add null customer");
+    }
+
+    @Test
     void getNonExistentCustomer() {
-        Customer customer = customerStorage.getCustomer("nonexistent");
-        assertNull(customer, "Getting a non-existent customer should return null");
+        assertNull(customerStorage.getCustomer("nonexistent"), "Getting a non-existent customer should return null");
     }
 }
