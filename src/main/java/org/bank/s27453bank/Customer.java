@@ -10,6 +10,10 @@ public class Customer {
         this.balance = balance;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public double getBalance() {
         return balance;
     }
