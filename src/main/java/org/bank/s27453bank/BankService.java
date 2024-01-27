@@ -1,21 +1,23 @@
 package org.bank.s27453bank;
 
 import org.springframework.stereotype.Service;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class BankService {
-    private final Map<String, Customer> customers = new HashMap<>();
+    private CustomerStorage customerStorage = new CustomerStorage();
+
+    public BankService(CustomerStorage customerStorage) {
+        this.customerStorage = customerStorage;
+    }
 
     public Customer registerCustomer(String id, double initialBalance) {
         Customer customer = new Customer(id, initialBalance);
-        customers.put(id, customer);
+        customerStorage.addCustomer(customer);
         return customer;
     }
 
     public TransactionResult makeTransfer(String customerId, double amount) {
-        Customer customer = customers.get(customerId);
+        Customer customer = customerStorage.getCustomer(customerId);
         if (customer == null) {
             return new TransactionResult(TransactionStatus.DECLINED, 0, "Customer not found");
         }
@@ -27,7 +29,7 @@ public class BankService {
     }
 
     public TransactionResult depositFunds(String customerId, double amount) {
-        Customer customer = customers.get(customerId);
+        Customer customer = customerStorage.getCustomer(customerId);
         if (customer == null) {
             return new TransactionResult(TransactionStatus.DECLINED, 0, "Customer not found");
         }
@@ -40,6 +42,6 @@ public class BankService {
     }
 
     public Customer getCustomerDetails(String customerId) {
-        return customers.get(customerId);
+        return customerStorage.getCustomer(customerId);
     }
 }

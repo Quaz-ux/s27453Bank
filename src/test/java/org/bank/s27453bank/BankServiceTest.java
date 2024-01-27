@@ -2,16 +2,17 @@ package org.bank.s27453bank;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class BankServiceTest {
 
     private BankService bankService;
+    private CustomerStorage customerStorage;
 
     @BeforeEach
     void setUp() {
-        bankService = new BankService();
+        customerStorage = new CustomerStorage();
+        bankService = new BankService(customerStorage);
     }
 
     @Test
@@ -19,6 +20,7 @@ class BankServiceTest {
         Customer customer = bankService.registerCustomer("123", 1000);
         assertNotNull(customer);
         assertEquals(1000, customer.getBalance());
+        assertNotNull(customerStorage.getCustomer("123"), "Customer should be stored in CustomerStorage");
     }
 
     @Test
@@ -42,10 +44,10 @@ class BankServiceTest {
         assertEquals(1000, result.getNewBalance());
         assertEquals("Deposit successful", result.getMessage());
 
-        TransactionResult result3 = bankService.depositFunds("123", -600); //Tak deposit xd
-        assertEquals(TransactionStatus.ACCEPTED, result3.getStatus());
-        assertEquals(400, result3.getNewBalance());
-        assertEquals("Deposit successful", result3.getMessage());
+        result = bankService.depositFunds("123", -600);
+        assertEquals(TransactionStatus.ACCEPTED, result.getStatus());
+        assertEquals(400, result.getNewBalance());
+        assertEquals("Deposit successful", result.getMessage());
 
         result = bankService.depositFunds("999", 100);
         assertEquals(TransactionStatus.DECLINED, result.getStatus());
