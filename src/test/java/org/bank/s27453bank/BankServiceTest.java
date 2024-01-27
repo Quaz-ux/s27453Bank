@@ -29,6 +29,11 @@ class BankServiceTest {
         TransactionResult result = bankService.makeTransfer("123", 100);
         assertEquals(TransactionStatus.ACCEPTED, result.getStatus());
         assertEquals(900, result.getNewBalance());
+        assertEquals("Transfer successful", result.getMessage());
+
+        result = bankService.makeTransfer("123", 2000);
+        assertEquals(TransactionStatus.DECLINED, result.getStatus());
+        assertEquals("Insufficient funds for the transfer", result.getMessage());
     }
 
     @Test
@@ -37,14 +42,16 @@ class BankServiceTest {
         TransactionResult result = bankService.depositFunds("123", 500);
         assertEquals(TransactionStatus.ACCEPTED, result.getStatus());
         assertEquals(1000, result.getNewBalance());
+        assertEquals("Deposit successful", result.getMessage());
 
-        TransactionResult result2 = bankService.depositFunds("123", 400);
-        assertEquals(TransactionStatus.ACCEPTED, result2.getStatus());
-        assertEquals(1400, result2.getNewBalance());
-
-        TransactionResult result3 = bankService.depositFunds("123", -400);
+        TransactionResult result3 = bankService.depositFunds("123", -600); //Tak deposit xd
         assertEquals(TransactionStatus.ACCEPTED, result3.getStatus());
-        assertEquals(1000, result3.getNewBalance());
+        assertEquals(400, result3.getNewBalance());
+        assertEquals("Deposit successful", result3.getMessage());
+
+        result = bankService.depositFunds("999", 100);
+        assertEquals(TransactionStatus.DECLINED, result.getStatus());
+        assertEquals("Customer not found", result.getMessage());
     }
 
     @Test
